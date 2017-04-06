@@ -30,7 +30,7 @@ object BibleWordCountNewTestamentOnly {
     *   be able to do with a RDD.
     *
     *   The purpose of this task is to become familiar with some basic operations in SparkSQL. This Spark application will use a DataFrame, aka Dataset[Row].
-    *   DataFrames provide functionality that would normally be used in SQL queries. There are two ways to process a DataFrame: one is to write SQL query
+    *   DataFrames provide functionality that would normally be used in SQL queries. There are two ways to process a DataFrame: one is to write a SQL query
     *   in a String and the second is to use a set of functions that are similar to SQL functions.
     *
     *   The DataFrame data has already been prepared for this Spark application in a set of parquet files.
@@ -102,10 +102,9 @@ object BibleWordCountNewTestamentOnly {
     *
     *   See these references to learn more about SparkSQL
     *     http://spark.apache.org/docs/latest/sql-programming-guide.html for more details
-    *     http://spark.apache.org/docs/latest/api/java/index.html
-    *       Dataset class
-    *       Column class
-    *       functions class
+    *     http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/Dataset.html
+    *     http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/Column.html
+    *     http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/functions.html
     *
     * @param spark configured spark session
     * @param input bible books input directory

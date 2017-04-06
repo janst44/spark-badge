@@ -61,7 +61,7 @@ public class BibleWordCount {
    * Task 2: Learn sortByKey()
    *
    *   Improve your Spark Application by sorting your dataset where the most common word appears on the top. To do this
-   *   look into using Spark's PairRDD method sortByKey().
+   *   look into using Spark's PairRDD method sortByKey(). Note that sortByKey() is only available to PairRDDs
    *
    *   See http://spark.apache.org/docs/latest/programming-guide.html#transformations
    *
@@ -72,13 +72,14 @@ public class BibleWordCount {
    * Task 3: Learn filter() and Broadcast variables
    *   Use filter() and Broadcast variables to remove common stop words from the result
    *
-   *   Notice how words that occur the most are the common stop words such as "the", "and", "of", ect.. For this next task
+   *   Notice how words that occur the most are the common stop words such as "the", "and", "of", etc. For this next task
    *   improve your Spark Application further by removing these common stop words before doing a word count. A very basic stop words
-   *   dataset has been provided, and it's directory location has been passed in as a parameter to this method. This stop words dataset
+   *   dataset has been provided, and its directory location has been passed in as a parameter to this method. This stop words dataset
    *   is basic, and you are welcome to add other words if you wish e.g. "thee", "thou", etc.
    *
    *   Read all the stop words into a set, then use that set to create a Broadcast variable. Using a Broadcast variable allows spark to efficiently
-   *   transfer large data to each executor in the cluster.
+   *   transfer large data to each executor in the cluster. It is much better to send large data to worker nodes via Broadcast variable, then it is
+   *   to send the data without a Broadcast variable.
    *     See http://spark.apache.org/docs/latest/programming-guide.html#broadcast-variables
    *       (using broadcast variables will not make any difference locally, but can make a huge difference when you run on a cluster with many nodes).
    *

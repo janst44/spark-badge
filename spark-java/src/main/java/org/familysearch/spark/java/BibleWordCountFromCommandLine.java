@@ -32,14 +32,16 @@ public class BibleWordCountFromCommandLine {
    *   This spark application will use the code you implemented in BibleWordCount2.run(), so make sure you have completed BibleWordCount2
    *   before doing this task.
    *
-   *   Note that this application expects one program argument: the output directory for saving the result. You can pass application arguments
+   *   Note that this application expects three program arguments: the input directory, the output directory, and the stop-words directory. You can pass application arguments
    *   using spark-submit by specifying them after the jar file.
-   *     spark-submit [options....] app.jar /path/to/output/
+   *     spark-submit [options....] app.jar /path/to/input/ /path/to/output /path/to/input/stop-words
+   *
+   *   Note: that input directory can be found from this project at input/bible-lines. The stop words directory can be found at input/stop-words
    *
    *   For this task, build the jar for this project and use that jar with spark-submit to run the Spark application locally.
    *     cd $PROJECT_DIR
    *     mvn clean install
-   *     $SPARK_HOME/bin/spark-submit [options....] spark-java/target/spark-java.jar /path/to/output/
+   *     $SPARK_HOME/bin/spark-submit [options....] spark-java/target/spark-java.jar /path/to/input/ /path/to/output /path/to/input/stop-words
    *
    *   See http://spark.apache.org/docs/latest/submitting-applications.html
    *       http://spark.apache.org/docs/latest/submitting-applications.html#master-urls
@@ -47,16 +49,16 @@ public class BibleWordCountFromCommandLine {
    *   It is useful to become familiar with the spark-submit script because it is used to run Spark applications on a cluster.
    */
   public static void main(String[] args) throws IOException {
-    if (args.length != 1) {
-      System.err.println("Application requires one argument for the output directory");
+    if (args.length != 3) {
+      System.err.println("Application requires three arguments. 0: input directory, 1: output directory, 2: stop words directory");
       System.exit(1);
     }
 
     final boolean setMaster = false;
     final JavaSparkContext sc = SparkUtil.createSparkContext(BibleWordCountFromCommandLine.class.getName(), setMaster);
-    final String input = SparkUtil.getInputDir("bible-lines");
-    final String stopWordsIn = SparkUtil.getInputDir("stop-words");
-    final String output = args[0];
+    final String input = args[0];
+    final String output = args[1];
+    final String stopWordsIn = args[2];
 
     System.out.println("Reading base input from " + input);
     System.out.println("Reading stop words input from " + stopWordsIn);

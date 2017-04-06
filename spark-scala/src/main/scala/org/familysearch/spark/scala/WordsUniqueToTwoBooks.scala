@@ -25,6 +25,15 @@ object WordsUniqueToTwoBooks {
     *
     *   For this task use distinct() and groupByKey() to find out which words appear in only two books of the Bible.
     *
+    *   Here is the input format: <word>\t<esther>\t<old-testament>
+    *
+    *   Input Example:
+    *    hangings	esther	old-testament
+    *    fastened	esther	old-testament
+    *    cords	esther	old-testament
+    *    fine	esther	old-testament
+    *    linen	esther	old-testament
+    *
     *   distinct() is a method that will remove all duplicate elements from your RDD. It uses the equals() method of the object type.
     *     See http://spark.apache.org/docs/latest/programming-guide.html#transformations
     *     Example1:

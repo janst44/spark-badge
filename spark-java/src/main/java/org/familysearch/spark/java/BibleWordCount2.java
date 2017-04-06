@@ -31,7 +31,7 @@ public class BibleWordCount2 {
    *   input format.
    *
    *   In BibleWordCount, the Spark application reads a dataset where each line in the file has only one word.
-   *   The input for this Spark application has many words on the same line. This means when textFile(input) is called,
+   *   The input for this Spark application has many words on the same line. Since textFile() parses its input by reading one line at a time,
    *   Spark will create an RDD[String] where each element is a String that contains many words.
    *
    *   Below is what the input dataset looks like:
@@ -57,8 +57,9 @@ public class BibleWordCount2 {
    *   but we are going to use filter() instead just to practice)
    *
    *   The next step is to do some further cleaning. There are some words in the dataset with punctuation characters attached to the word
-   *   e.g. "earth.". You need to strip all of these punctuation characters from the words in the RDD[String]. This can be done using a map()
-   *   function.
+   *   e.g. "earth.". Remove punctuation characters from the word that make sense to you. You can decide how you want to handle all cases like:
+   *   Should "it's" be "it's" or "its". It would be a good idea however to at least remove '.' and ',' at the end of a word.
+   *   Removing punctuation can be done using a map() function.
    *
    *   The next step is to transform all of your word elements to either all uppercase characters or all lowercase characters. The reason for
    *   this is to get a more accurate word count since cases change throughout the text e.g. "Let", and "let". Also after cleaning all
@@ -67,7 +68,8 @@ public class BibleWordCount2 {
    *   Finally, when you have a RDD[String] where each element is a word and has been prepared for a word count analysis, complete the WordCount
    *   Spark app (you may use your code from the BibleWordCount Spark app).
    *
-   *   The output format should be the same format as BibleWordCount
+   *   The output format should be the same format as BibleWordCount, however the content does not need to match 100% since you may have chosen a different
+   *   way of handling punctuation characters in the middle of a string e.g. it's
    *
    * @param sc configured SparkContext to run locally
    * @param input bible lines input directory
