@@ -25,11 +25,11 @@ public class BibleWordCount {
   /**
    * Run the main() method from your IDE when you want to run your code
    *
-   * Task 1 : Learn textFile(), map(), reduceByKey(), and saveAsTextFile()
-   *   Use textFile(), map(), and reduceByKey() to implement a Spark application that reads in all of words from the bible
-   *   and counts how many times that word occurs. Use the below references to learn about textFile(), map(), and reduceByKey()
+   * Task 1 : Learn textFile(), mapToPair(), reduceByKey(), and saveAsTextFile()
+   *   Use textFile(), mapToPair(), and reduceByKey() to implement a Spark application that reads in all of words from the bible
+   *   and counts how many times that word occurs. Use the below references to learn about textFile(), mapToPair(), and reduceByKey()
    *       textFile(): http://spark.apache.org/docs/latest/programming-guide.html#external-datasets
-   *       map(): http://spark.apache.org/docs/latest/programming-guide.html#working-with-key-value-pairs
+   *       mapToPair(): http://spark.apache.org/docs/latest/programming-guide.html#working-with-key-value-pairs
    *       reduceByKey(): http://spark.apache.org/docs/latest/programming-guide.html#transformations
    *       saveAsTextFile(): http://spark.apache.org/docs/latest/programming-guide.html#actions
    *
@@ -87,7 +87,7 @@ public class BibleWordCount {
    *     Set<String> set = // retrieve the stop words
    *     Broadcast<Set<String>> broadcast = sc.broadcast(set)
    *     rdd.filter(word -> {
-   *       broadcast. // use broadcast variable here
+   *       broadcast.value() // use broadcast variable here
    *     })
    *   In this example above, spark will know to send the broadcast variable to the workers that run the filter function, since we referenced the
    *   broadcast variable in the anonymous function.

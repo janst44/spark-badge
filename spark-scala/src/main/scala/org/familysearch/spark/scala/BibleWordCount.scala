@@ -85,7 +85,7 @@ object BibleWordCount {
     *     val set = // retrieve the stop words
     *     val broadcast = sc.broadcast(set)
     *     rdd.filter(word => {
-    *       broadcast. // use broadcast variable here
+    *       broadcast.value // use broadcast variable here
     *     })
     *   In this example above, spark will know to send the broadcast variable to the workers that run the filter function, since we referenced the
     *   broadcast variable in the anonymous function.

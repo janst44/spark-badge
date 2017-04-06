@@ -32,7 +32,7 @@ public class BibleWordCount2 {
    *
    *   In BibleWordCount, the Spark application reads a dataset where each line in the file has only one word.
    *   The input for this Spark application has many words on the same line. This means when textFile(input) is called,
-   *   Spark will create an RDD[String] where each element is String that contains many words.
+   *   Spark will create an RDD[String] where each element is a String that contains many words.
    *
    *   Below is what the input dataset looks like:
    *     The Old Testament of the King James Version of the Bible
@@ -43,7 +43,8 @@ public class BibleWordCount2 {
    *     waters.
    *
    *   The first step for this Spark Application will be to read in the input, then generate a RDD[String] where
-   *   each element is one word. To do this, you will need to use flatMap()
+   *   each element is one word. To do this, you will need to use flatMap(). flatMap() reads in one element and can emit 0 to many
+   *   elements, where map() or mapToPair() only reads in one element and emits one element.
    *     See http://spark.apache.org/docs/latest/programming-guide.html#transformations
    *
    *   Note: There are many characters in the input to clean up e.g. verse numbers and punctuation. For Task 4 just focus on the flatMap(),
@@ -52,18 +53,19 @@ public class BibleWordCount2 {
    * Task 5: Use more filter() and map() functions to clean the input
    *   Take the RDD[String] returned from the flatMap and do some cleaning. Notice the verse numbers in the text e.g. "1:1".
    *   Any element that matches this verse number pattern should be removed from the RDD[String]. Use a filter() function
-   *   to remove all elements matching this verse number pattern.
+   *   to remove all elements matching this verse number pattern. (You can could actually do the filtering logic inside of the flatMap,
+   *   but we are going to use filter() instead just to practice)
    *
    *   The next step is to do some further cleaning. There are some words in the dataset with punctuation characters attached to the word
-   *   e.g. "earth.". You need to strip all of these punctuation characters from the words in the RDD[String]. This can be done doing a map()
+   *   e.g. "earth.". You need to strip all of these punctuation characters from the words in the RDD[String]. This can be done using a map()
    *   function.
    *
    *   The next step is to transform all of your word elements to either all uppercase characters or all lowercase characters. The reason for
    *   this is to get a more accurate word count since cases change throughout the text e.g. "Let", and "let". Also after cleaning all
    *   of the words, you may end up with empty String elements, make sure to remove empty String elements with a filter() function.
    *
-   *   Finally, when you have a RDD[String] where each element is a word and has been prepared for a word count analysis, use your solution
-   *   from BibleWordCount to complete this Spark Application.
+   *   Finally, when you have a RDD[String] where each element is a word and has been prepared for a word count analysis, complete the WordCount
+   *   Spark app (you may use your code from the BibleWordCount Spark app).
    *
    *   The output format should be the same format as BibleWordCount
    *
