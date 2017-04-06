@@ -26,15 +26,16 @@ object BibleWordCountNewTestamentOnly {
     * Task 8: Become familiar with SparkSQL
     *
     *   SparkSQL is one of the high level libraries Spark provides. SparkSQL requires data to be structured e.g. DataFrame and
-    *   Dataset. Using SparkSQL's Dataset or DataFrame allows spark to perform extra optimizations it normally would not
+    *   Dataset. Using SparkSQL's Dataset or DataFrame allows Spark to perform extra optimizations it normally would not
     *   be able to do with a RDD.
     *
     *   The purpose of this task is to become familiar with some basic operations in SparkSQL. This Spark application will use a DataFrame, aka Dataset[Row].
     *   DataFrames provide functionality that would normally be used in SQL queries. There are two ways to process a DataFrame: one is to write SQL query
-    *   in a String and the second is to use a set of static functions that are similar to SQL functions.
+    *   in a String and the second is to use a set of functions that are similar to SQL functions.
     *
     *   The DataFrame data has already been prepared for this Spark application in a set of parquet files.
     *     See http://spark.apache.org/docs/latest/sql-programming-guide.html#parquet-files
+    *
     *   Working with parquet files is very simple using the provided SparkSession object in this method called "spark"
     *     val df = spark.read.parquet(input)
     *     df.show
@@ -65,7 +66,7 @@ object BibleWordCountNewTestamentOnly {
     *     //|   throne|esther|old-testament|
     *     //+---------+------+-------------+
     *
-    *   The code above will read in the parquet files and create a DataFrame. df.show is invoked just to get a view of the data. Notice
+    *   The code above will reads in the parquet files and creates a DataFrame. df.show is invoked just to get a view of the data. Notice
     *   the schema of the data: word, book, and testament. You can use these fields like you normally would with a SQL query.
     *     val df = spark.read.parquet(input)
     *     df.createTempView("bible")

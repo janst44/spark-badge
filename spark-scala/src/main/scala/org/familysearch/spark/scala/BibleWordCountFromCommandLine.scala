@@ -33,7 +33,7 @@ import org.familysearch.spark.scala.util.SparkUtil
   *     2) Choose the version of spark that matches the spark version of this repo (see parent pom.xml spark.version)
   *     3) Choose the Pre-Built version for the most current version of Hadoop
   *     4) Click the download link
-  *     5) Extract the binaries from the tar ball
+  *     5) Extract the binaries from the tarball
   *       tar -xzvf spark-2.1.0-bin-hadoop2.7.tgz
   *
   *   It is useful to become familiar with the spark-submit script because it is used run Spark applications on a cluster.

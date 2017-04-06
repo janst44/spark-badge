@@ -58,16 +58,16 @@ public class WordsUniqueToTwoBooks {
    *
    *   Word Count Example:
    *     sc.textFile(input)
-   *       .map(word => (word, 1L))
+   *       .mapToPair(word -> new Tuple2<>(word, 1L))
    *       .groupByKey()
-   *       .map(tuple => {
-   *         var cnt = 0L
-   *         for (value <- tuple._2) {
-   *           cnt += value
+   *       .map(tuple -> {
+   *         long cnt = 0L;
+   *         for (long value : tuple._2()) {
+   *           cnt += value;
    *         }
-   *         (tuple._1, cnt))
+   *         return new Tuple2<>(tuple._1(), cnt);
    *       })
-   *       .saveAsTextFile(output)
+   *       .saveAsTextFile(output);
    *
    *   Spark's reduceByKey() function is generally a more efficient solution for a reduce function. However, sometimes an application
    *   requires the logic of groupByKey() or in other cases it is better or more efficient to use groupByKey(). This Spark application

@@ -33,8 +33,7 @@ public class CreateBibleDataFrameFromRawText {
    *     1) Inferring the schema using reflection: http://spark.apache.org/docs/latest/sql-programming-guide.html#inferring-the-schema-using-reflection
    *     2) Programmatically specifying the schema: http://spark.apache.org/docs/latest/sql-programming-guide.html#programmatically-specifying-the-schema
    *
-   *   You may use which ever method you like. The end result needs to have the following fields for each row: "word", "book", and "testament". If you are going to infer the schema,
-   *   make sure you include "import spark.implicits._" at the beginning of the run function.
+   *   You may use which ever method you like. The end result needs to have the following fields for each row: "word", "book", and "testament".
    *
    *   The input dataset has the following schema: <word>\t<book>\t<testament>
    *     now	esther	old-testament

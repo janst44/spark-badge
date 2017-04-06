@@ -50,15 +50,15 @@ public class BibleWordCount2 {
    *   Task 5 will focus on cleaning the input further.
    *
    * Task 5: Use more filter() and map() functions to clean the input
-   *   Take the RDD[String] returned from the flatMap and do some cleaning. Notice the verse numbers in
-   *   the text e.g. "1:1". Any element that matches this verse number pattern should be removed from the RDD[String]. Use a filter()
-   *   function to remove all elements matching this verse number pattern.
+   *   Take the RDD[String] returned from the flatMap and do some cleaning. Notice the verse numbers in the text e.g. "1:1".
+   *   Any element that matches this verse number pattern should be removed from the RDD[String]. Use a filter() function
+   *   to remove all elements matching this verse number pattern.
    *
-   *   The next step is to do some further cleaning. There are some words in the dataset with a punctuation characters attached to the word
+   *   The next step is to do some further cleaning. There are some words in the dataset with punctuation characters attached to the word
    *   e.g. "earth.". You need to strip all of these punctuation characters from the words in the RDD[String]. This can be done doing a map()
    *   function.
    *
-   *   The next step is to transform all of your word elements to either all uppercase characters are all lowercase characters. The reason for
+   *   The next step is to transform all of your word elements to either all uppercase characters or all lowercase characters. The reason for
    *   this is to get a more accurate word count since cases change throughout the text e.g. "Let", and "let". Also after cleaning all
    *   of the words, you may end up with empty String elements, make sure to remove empty String elements with a filter() function.
    *
@@ -72,7 +72,7 @@ public class BibleWordCount2 {
    * @param stopWordsIn stop words input directory
    * @param output result output directory
    */
-  protected static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output) {
+  static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output) {
     // write code here
   }
 }

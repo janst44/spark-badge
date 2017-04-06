@@ -45,7 +45,7 @@ object BibleWordCount {
     *   will create a RDD where each element is one word.
     *
     *   Use the saveAsTextFile(output) method on the RDD to save your result. The output should be in this format: <word>\t<count>.
-    *   Note that you will have to use a map() function in the end of the spark application  to transform the elements in your RDD
+    *   Note that you will have to use a map() function in the end of the Spark application  to transform the elements in your RDD
     *   to match this format <word>\t<count>.
     *
     *   Below is an example of what the output format should look like:
@@ -71,7 +71,7 @@ object BibleWordCount {
     *   Use filter() and Broadcast variables to remove common stop words from the result
     *
     *   Notice how words that occur the most are the common stop words such as "the", "and", "of", ect.. For this next task
-    *   improve your Spark Application further to remove these common stop words before doing a word count. A very basic stop words
+    *   improve your Spark Application further by removing remove these common stop words before doing a word count. A very basic stop words
     *   dataset has been provided, and it's directory location has been passed in as a parameter to this method. This stop words dataset
     *   is basic, and you are welcome to add other words if you wish e.g. "thee", "thou", etc.
     *
