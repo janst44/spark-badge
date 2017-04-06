@@ -25,7 +25,7 @@ public class CreateBibleDataFrameFromRawText {
   /**
    * Run the main() method from your IDE when you want to run your code
    *
-   * Task 9: Learn how to create SparkSQL DataFrame's from raw text and persist it to parquet files.
+   * Task 9: Learn how to create SparkSQL DataFrames from raw text and persist it to parquet files.
    *
    *   For this task read in raw text and convert it to a DataFrame
    *
