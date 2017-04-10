@@ -47,6 +47,8 @@ public class BibleWordCountFromCommandLine {
    *       http://spark.apache.org/docs/latest/submitting-applications.html#master-urls
    *
    *   It is useful to become familiar with the spark-submit script because it is used to run Spark applications on a cluster.
+   *
+   *   todo copy your spark-submit command here
    */
   public static void main(String[] args) throws IOException {
     if (args.length != 3) {

@@ -75,6 +75,6 @@ object BibleWordCount2 {
     * @param output result output directory
     */
   def run(sc: SparkContext, input: String, stopWordsIn: String, output: String): Unit = {
-    // write code here
+    // todo write code here
   }
 }

@@ -115,6 +115,6 @@ public class BibleWordCountNewTestamentOnly {
    * @param output result output directory
    */
   private static void run(final SparkSession spark, final String input, final String output) throws AnalysisException {
-    // write code here
+    // todo write code here
   }
 }

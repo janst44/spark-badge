@@ -77,6 +77,6 @@ public class BibleWordCount2 {
    * @param output result output directory
    */
   static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output) {
-    // write code here
+    // todo write code here
   }
 }
