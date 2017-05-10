@@ -27,7 +27,7 @@ public class BibleWordCount {
    *
    * Task 1 : Learn textFile(), mapToPair(), reduceByKey(), and saveAsTextFile()
    *   Use textFile(), mapToPair(), and reduceByKey() to implement a Spark application that reads in all of words from the bible
-   *   and counts how many times that word occurs. You will also need to understand what and RDD is.
+   *   and counts how many times that word occurs. You will also need to understand what an RDD is.
    *   Use the below references to learn about RDD, textFile(), mapToPair(), and reduceByKey()
    *       RDD: http://spark.apache.org/docs/latest/programming-guide.html#resilient-distributed-datasets-rdds
    *            https://www.tutorialspoint.com/apache_spark/apache_spark_rdd.htm
