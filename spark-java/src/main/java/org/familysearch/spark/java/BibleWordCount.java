@@ -68,7 +68,7 @@ public class BibleWordCount {
    *
    *   See http://spark.apache.org/docs/latest/programming-guide.html#transformations
    *
-   *   Tip: Scala's Tuple2 has a swap() function witch returns a Tuple2 where the first and second values in the tuple are swapped
+   *   Tip: Scala's Tuple2 has a swap() function which returns a Tuple2 where the first and second values in the tuple are swapped
    *     ("shall", 9838).swap equals (9838, "shall")
    *
    *
