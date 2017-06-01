@@ -27,7 +27,7 @@ public class WordsUniqueToTwoBooks {
    *
    *   For this task use distinct() and groupByKey() to find out which words appear in only two books of the Bible.
    *
-   *   Here is the input format: <word>\t<esther>\t<old-testament>
+   *   Here is the input format: <word>\t<book>\t<old-testament>
    *
    *   Input Example:
    *    hangings	esther	old-testament
