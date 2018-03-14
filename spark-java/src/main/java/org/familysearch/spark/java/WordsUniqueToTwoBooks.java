@@ -1,10 +1,7 @@
 package org.familysearch.spark.java;
 
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.familysearch.spark.java.util.SparkUtil;
-import scala.Tuple2;
 
 import java.io.IOException;
 
@@ -91,35 +88,6 @@ public class WordsUniqueToTwoBooks {
    * @param output result output directory
    */
   private static void run(final JavaSparkContext sc, final String input, final String output) {
-
-    JavaRDD<String> lines = sc.textFile(input).distinct();
-    JavaPairRDD<String, String> ds = lines.mapToPair(x -> {
-      String [] splits = x.split("\t");
-      if (splits.length < 2) {
-        throw new IllegalArgumentException("String not in correct format");
-      }
-      return new Tuple2<>(splits[0],splits[1]);
-    });
-    ds.groupByKey()
-      .filter(tuple -> {
-        int cnt = 0;
-        for(String book : tuple._2) {
-          cnt++;
-        }
-        return cnt == 2;
-      })
-      .saveAsTextFile(output);
-//    sc.textFile(input)
-//      .distinct()
-//      .mapToPair(word -> new Tuple2<>(word, 1L))
-//      .groupByKey()
-//      .map(tuple -> {
-//        long cnt = 0L;
-//        for (long value : tuple._2()) {
-//          cnt += value;
-//        }
-//        return new Tuple2<>(tuple._1(), cnt);
-//      })
-//      .saveAsTextFile(output);
+    // todo write code here
   }
 }

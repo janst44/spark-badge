@@ -1,18 +1,9 @@
 package org.familysearch.spark.java;
 
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.broadcast.Broadcast;
 import org.familysearch.spark.java.util.SparkUtil;
-import scala.Tuple2;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Class created by dalehulse on 3/27/17.
@@ -86,25 +77,6 @@ public class BibleWordCount2 {
    * @param output result output directory
    */
   static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output) {
-
-    JavaRDD<String> lines = sc.textFile(input);
-    JavaRDD<String> inputWords = lines.flatMap(x -> Arrays.asList(x.split(" ")).iterator());
-
-    JavaRDD<String> filterWords = inputWords.filter(x -> x.matches("[a-zA-Z]+"));  // filter out all the words do not contain a letter, like '1:76'
-
-    JavaRDD<String> removePunctuation = filterWords.map(x -> x.replaceAll(".,?!\'", ""));  //remove punctuations
-
-    JavaRDD<String> upperCaseWords = removePunctuation.map(x -> x.toUpperCase());  //change all words to upper case to count they more accurate
-
-    JavaRDD<String> rdd = sc.textFile(stopWordsIn);
-    JavaRDD<String> upper = rdd.map(x -> x.toUpperCase());  //change the stop words list to uppercase too
-    Set<String> stopWords = new HashSet(upper.collect());
-    Broadcast<Set<String>> broadcast = sc.broadcast(stopWords);
-    JavaRDD<String> bibleWords = upperCaseWords.filter(word -> { return !broadcast.value().contains(word); });  //filter out all the words in the stopWords List
-    JavaPairRDD<String, Integer> pairs = bibleWords.mapToPair(s -> new Tuple2(s, 1));
-    JavaPairRDD<String, Integer> counts = pairs.reduceByKey((a, b) -> a + b);
-    JavaPairRDD<String, Integer> sorted = counts.mapToPair(x -> x.swap()).sortByKey(false, 1).mapToPair(x -> x.swap());  //sort the words count list by the numbers it appears (sort by value)
-    sorted.saveAsTextFile(output);
-
+    // todo write code here
   }
 }
