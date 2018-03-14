@@ -1,10 +1,17 @@
 package org.familysearch.spark.java;
 
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.familysearch.spark.java.util.SparkUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class created by dalehulse on 4/5/17.
@@ -57,6 +64,31 @@ public class CreateBibleDataFrameFromRawText {
    * @param output result output directory
    */
   private static void run(final JavaSparkContext sc, final SparkSession spark, final String input, final String output) {
-    // todo write code here
+
+    //Create an RDD
+    JavaRDD<String> bwRDD = spark.sparkContext()
+      .textFile(input, 1)
+      .toJavaRDD();
+
+    // Grenerate the schema from a string
+    String schemaString = "<word>\t<book>\t<testament>";
+    List<StructField> fields = new ArrayList<>();
+    for (String fieldName : schemaString.split("\t")) {
+      StructField field = DataTypes.createStructField(fieldName, DataTypes.StringType, true);
+      fields.add(field);
+    }
+    StructType schema = DataTypes.createStructType(fields);
+
+    // Convert records of the RDD (people) to Rows
+    JavaRDD<Row> rowRDD = bwRDD.map((Function<String, Row>) record -> {
+      String[] attributes = record.split("\t");
+      return RowFactory.create(attributes[0], attributes[1], attributes[2]);
+    });
+
+    // Apply the schema to the RDD
+    Dataset<Row> result = spark.createDataFrame(rowRDD, schema);
+//    result.show();
+
+    result.write().parquet(output);
   }
 }
