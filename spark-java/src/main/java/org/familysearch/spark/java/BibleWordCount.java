@@ -1,15 +1,9 @@
 package org.familysearch.spark.java;
 
-import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.broadcast.Broadcast;
 import org.familysearch.spark.java.util.SparkUtil;
-import scala.Tuple2;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Class created by dalehulse on 3/15/17.
@@ -111,16 +105,6 @@ public class BibleWordCount {
    * @param output result output directory
    */
   private static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output) {
-
-    JavaRDD<String> inputWords = sc.textFile(input);
-    JavaRDD<String> rdd = sc.textFile(stopWordsIn);
-    Set<String> stopWords = new HashSet(rdd.collect());
-    Broadcast<Set<String>> broadcast = sc.broadcast(stopWords);
-    JavaRDD<String> bibleWords = inputWords.filter(word -> { return !broadcast.value().contains(word); });  //filter out all the words in the stopWords List
-    JavaPairRDD<String, Integer> pairs = bibleWords.mapToPair(s -> new Tuple2(s, 1));
-    JavaPairRDD<String, Integer> counts = pairs.reduceByKey((a, b) -> a + b);
-    JavaPairRDD<String, Integer> sorted = counts.mapToPair(x -> x.swap()).sortByKey(false).mapToPair(x -> x.swap());  //sort the words count list by the numbers it appears (sort by value)
-    sorted.saveAsTextFile(output);
-
+    // todo write code here
   }
 }
