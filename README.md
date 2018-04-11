@@ -35,4 +35,4 @@ To Earn the Microbadge
    4. WordsUniqueToTwoBooks
    5. BibleWordCountNewTestamentOnly
    6. CreateBibleDataFrameFromRawText
-4. Push your changes and send me an email to <dale.hulse@familysearch.org> with a link to your forked repository.
+4. Push your changes and send me an email to <jensenbl@familysearch.org> with a link to your forked repository.
