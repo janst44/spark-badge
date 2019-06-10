@@ -2,6 +2,8 @@ package org.familysearch.spark.java;
 
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.AnalysisException;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.familysearch.spark.java.util.SparkUtil;
 
@@ -116,5 +118,11 @@ public class BibleWordCountNewTestamentOnly {
    */
   private static void run(final SparkSession spark, final String input, final String output) throws AnalysisException {
     // todo write code here
+    Dataset<Row> df = spark.read().parquet(input);
+    df.createTempView("bible");
+    df.show();
+    Dataset<Row> result = spark.sql("select testament, count(*) as word_cnt " + "from bible " + "where testament = 'new-testament'" + "group by testament ");
+    result.show();
+    result.javaRDD().map(row -> row.getAs("testament").toString() + "\t" + row.getAs("word_cnt").toString()).saveAsTextFile(output);
   }
 }

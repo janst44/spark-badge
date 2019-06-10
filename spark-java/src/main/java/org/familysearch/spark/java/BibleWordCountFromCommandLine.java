@@ -1,14 +1,40 @@
 package org.familysearch.spark.java;
 
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.broadcast.Broadcast;
 import org.familysearch.spark.java.util.SparkUtil;
+import scala.Tuple2;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static org.familysearch.spark.java.SerializableComparator.serialize;
 
 /**
  * Class created by dalehulse on 4/5/17.
  */
 public class BibleWordCountFromCommandLine {
+  private static final Pattern SPACE = Pattern.compile(" ");
+
+  public static String removePunctuation(String s) {
+    return s.replaceAll("[^a-zA-Z\\d\\s]", "").trim().toLowerCase();
+  }
+
+  public static <T> Set<T> convertListToSet(List<T> list)
+  {
+    // create a set from the List
+    return list.stream().collect(Collectors.toSet());
+  }
+
   /**
    * Class created by dalehulse on 4/5/17.
    *
@@ -48,7 +74,10 @@ public class BibleWordCountFromCommandLine {
    *
    *   It is useful to become familiar with the spark-submit script because it is used to run Spark applications on a cluster.
    *
-   *   todo copy your spark-submit command here
+   *   todo copy your spark-submit command here:
+   *
+   *   >> export SPARK_HOME=/home/joshua/Documents/spark-2.4.3-bin-hadoop2.7/
+   *   >> $SPARK_HOME/bin/spark-submit --class org.familysearch.spark.java.BibleWordCountFromCommandLine spark-java/target/spark-java.jar input/bible-words output/bible-word-count-from-command-line input/stop-words
    */
   public static void main(String[] args) throws IOException {
     if (args.length != 3) {
@@ -68,4 +97,8 @@ public class BibleWordCountFromCommandLine {
     BibleWordCount2.run(sc, input, stopWordsIn, output);
     sc.stop();
   }
+
 }
+
+
+

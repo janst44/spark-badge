@@ -1,25 +1,36 @@
 package org.familysearch.spark.java;
 
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.broadcast.Broadcast;
 import org.familysearch.spark.java.util.SparkUtil;
+import scala.Tuple2;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-/**
- * Class created by dalehulse on 3/27/17.
- */
+import static org.familysearch.spark.java.SerializableComparator.serialize;
+
 public class BibleWordCount2 {
-  public static void main(String[] args) throws IOException {
-    final JavaSparkContext sc = SparkUtil.createSparkContext(BibleWordCount.class.getName());
-    final String input = SparkUtil.getInputDir("bible-lines");
-    final String stopWordsIn = SparkUtil.getInputDir("stop-words");
-    final String output = SparkUtil.prepareOutputDir("bible-word-count-from-lines");
 
-    System.out.println("Reading base input from " + input);
-    System.out.println("Reading stop words input from " + stopWordsIn);
-    System.out.println("Writing result to " + output);
-    run(sc, input, stopWordsIn, output);
-    sc.stop();
+  private static final Pattern SPACE = Pattern.compile(" ");
+
+  public static String removePunctuation(String s) {
+    return s.replaceAll("[^a-zA-Z\\d\\s]", "").trim().toLowerCase();
+  }
+
+  public static <T> Set<T> convertListToSet(List<T> list)
+  {
+    // create a set from the List
+    return list.stream().collect(Collectors.toSet());
   }
 
   /**
@@ -70,13 +81,50 @@ public class BibleWordCount2 {
    *
    *   The output format should be the same format as BibleWordCount, however the content does not need to match 100% since you may have chosen a different
    *   way of handling punctuation characters in the middle of a string e.g. it's
-   *
-   * @param sc configured SparkContext to run locally
-   * @param input bible lines input directory
-   * @param stopWordsIn stop words input directory
-   * @param output result output directory
    */
-  static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output) {
-    // todo write code here
+  public static void main(String[] args) throws IOException {
+    final JavaSparkContext sc = SparkUtil.createSparkContext(org.familysearch.spark.java.BibleWordCount.class.getName());
+    final String input = SparkUtil.getInputDir("bible-words");
+    final String stopWordsIn = SparkUtil.getInputDir("stop-words");
+    final String output = SparkUtil.prepareOutputDir("bible-word-count");
+
+    System.out.println("Reading base input from " + input);
+    System.out.println("Reading stop words input from " + stopWordsIn);
+    System.out.println("Writing result to " + output);
+    run(sc, input, stopWordsIn, output);
+    sc.stop();
   }
+
+  static void run(final JavaSparkContext sc, final String input, final String stopWordsIn, final String output){
+    try {
+      List<String> stopWords0 = Files.readAllLines(Paths.get(stopWordsIn + "/stop-words-1.txt"));
+      Set<String> stopWords = convertListToSet(stopWords0);
+      JavaRDD<String> lines = sc.textFile(input);
+
+      Function<String, Boolean> isNotEmpty = s -> s.trim().length() > 0;
+
+      // Broadcast variables allow the programmer to keep a read-only variable
+      // cached on each machine rather than shipping a copy of it with tasks.
+      Broadcast<List<String>> stopWordsBroadcast = sc.broadcast(stopWords0);
+
+      JavaRDD<String> words = lines.filter(isNotEmpty)
+          .map(org.familysearch.spark.java.BibleWordCount::removePunctuation)
+          .filter(isNotEmpty)
+          .flatMap(s -> Arrays.asList(SPACE.split(s)).iterator()).filter(isNotEmpty)
+          .filter(token -> !stopWordsBroadcast.value().contains(token));
+
+      JavaPairRDD<String, Integer> counts = words.mapToPair(x -> new Tuple2<>(x, 1)).reduceByKey((x, y) -> x + y);
+
+      List<Tuple2<String, Integer>> result =
+          counts.takeOrdered(10, serialize((wordCountTuple1, wordCountTuple2) -> -Integer.compare(wordCountTuple1._2(), wordCountTuple2._2())));
+      System.out.println("");
+      for (Tuple2<?, ?> tuple : result) {
+        System.out.println(tuple._1() + ": " + tuple._2());
+      }
+      counts.saveAsTextFile(output);
+    }catch(IOException e){
+      e.printStackTrace();
+    }
+  }
+
 }

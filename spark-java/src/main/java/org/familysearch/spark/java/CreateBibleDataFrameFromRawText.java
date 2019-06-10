@@ -1,10 +1,18 @@
 package org.familysearch.spark.java;
 
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.SparkSession;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.familysearch.spark.java.util.SparkUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class created by dalehulse on 4/5/17.
@@ -58,5 +66,42 @@ public class CreateBibleDataFrameFromRawText {
    */
   private static void run(final JavaSparkContext sc, final SparkSession spark, final String input, final String output) {
     // todo write code here
+    // Create an RDD
+    JavaRDD<String> bible_words = sc
+        .textFile(input, 1);
+
+    // The schema is encoded in a string
+    String schemaString = "word book testament";
+
+    // Generate the schema based on the string of schema
+    List<StructField> fields = new ArrayList<>();
+    for (String fieldName : schemaString.split(" ")) {
+      StructField field = DataTypes.createStructField(fieldName, DataTypes.StringType, true);
+      fields.add(field);
+    }
+    StructType schema = DataTypes.createStructType(fields);
+
+    // Convert records of the RDD (bible-words) to Rows
+    JavaRDD<Row> rowRDD = bible_words.map((Function<String, Row>) record -> {
+      String[] attributes = record.split("\t");
+      return RowFactory.create(attributes[0], attributes[1].trim(), attributes[2].trim());
+    });
+
+    // Apply the schema to the RDD
+    Dataset<Row> result = spark.createDataFrame(rowRDD, schema);
+
+    // Creates a temporary view using the DataFrame
+    result.createOrReplaceTempView("bible");
+//     SQL can be run over a temporary view created using DataFrames
+//    Dataset<Row> results = spark.sql("SELECT book FROM bible");
+//
+//    // The results of SQL queries are DataFrames and support all the normal RDD operations
+//    // The columns of a row in the result can be accessed by field index or by field name
+//    Dataset<String> namesDS = results.map(
+//        (MapFunction<Row, String>) row -> "Book: " + row.getString(0),
+//        Encoders.STRING());
+//    namesDS.show();
+
+    result.write().parquet(output);
   }
 }

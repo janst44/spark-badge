@@ -1,9 +1,21 @@
 package org.familysearch.spark.java;
 
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.familysearch.spark.java.util.SparkUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.count;
 
 /**
  * Class created by dalehulse on 4/5/17.
@@ -89,5 +101,40 @@ public class WordsUniqueToTwoBooks {
    */
   private static void run(final JavaSparkContext sc, final String input, final String output) {
     // todo write code here
+    final SparkSession spark = new SparkSession(sc.sc());
+
+    JavaRDD<String> bible_words = sc
+        .textFile(input, 1);
+
+    // The schema is encoded in a string
+    String schemaString = "word book testament";
+
+    // Generate the schema based on the string of schema
+    List<StructField> fields = new ArrayList<>();
+    for (String fieldName : schemaString.split(" ")) {
+      StructField field = DataTypes.createStructField(fieldName, DataTypes.StringType, true);
+      fields.add(field);
+    }
+    StructType schema = DataTypes.createStructType(fields);
+
+    // Convert records of the RDD (bible-words) to Rows
+    JavaRDD<Row> rowRDD = bible_words.map((Function<String, Row>) record -> {
+      String[] attributes = record.split("\t");
+      return RowFactory.create(attributes[0], attributes[1].trim(), attributes[2].trim());
+    });
+
+    // Apply the schema to the RDD
+    Dataset<Row> result = spark.createDataFrame(rowRDD, schema);
+    result.show();
+    // Creates a temporary view using the DataFrame
+    result.createOrReplaceTempView("bible");
+
+    //Dataset<Row> df = spark.sql("select book, count(*) as word_cnt " + "from bible " + "group by book");
+    Dataset<Row> uniqueWords = result.select("word", "book").distinct();
+    uniqueWords.show();
+    Dataset<Row> df = uniqueWords.groupBy(col("word")).agg(count("book").as("book_cnt"));
+    df.show();
+    Dataset<Row> uniqueToTwoBooks = df.select("word", "book_cnt").filter("book_cnt = 1");
+    uniqueToTwoBooks.show();
   }
 }
